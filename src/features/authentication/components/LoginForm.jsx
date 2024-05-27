@@ -9,11 +9,7 @@ export default function LoginForm() {
           <Input placeholder="Email address or phone number" />
         </div>
         <div>
-          <Input
-            placeholder="Password"
-            type="password"
-            error="test error message"
-          />
+          <Input placeholder="Password" type="password" />
         </div>
         <div>
           <Button width="full">Log in</Button>
