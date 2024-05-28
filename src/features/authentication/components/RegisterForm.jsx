@@ -31,7 +31,7 @@ export default function RegisterForm() {
     e.preventDefault();
     const error = validateRegister(input);
     if (error) {
-      setInputError(error);
+      return setInputError(error);
     }
   };
 
