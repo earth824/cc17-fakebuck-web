@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import validateRegister from '../validators/validate-register';
+import authApi from '../../../apis/auth';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 const initialInput = {
   firstName: '',
@@ -19,7 +22,7 @@ const initialInputError = {
   confirmPassword: ''
 };
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }) {
   const [input, setInput] = useState(initialInput);
   const [inputError, setInputError] = useState(initialInputError);
 
@@ -27,11 +30,27 @@ export default function RegisterForm() {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  const handleSubmitForm = e => {
-    e.preventDefault();
-    const error = validateRegister(input);
-    if (error) {
-      return setInputError(error);
+  const handleSubmitForm = async e => {
+    try {
+      e.preventDefault();
+      const error = validateRegister(input);
+      if (error) {
+        return setInputError(error);
+      }
+      setInputError({ ...initialInputError });
+
+      await authApi.register(input);
+      onSuccess();
+      toast.success('registered successfully. please log in to continue.');
+    } catch (err) {
+      console.log(err);
+      if (err instanceof AxiosError) {
+        if (err.response.data.field === 'emailOrMobile')
+          setInputError(prev => ({
+            ...prev,
+            emailOrMobile: 'email or mobile already in use.'
+          }));
+      }
     }
   };
 
