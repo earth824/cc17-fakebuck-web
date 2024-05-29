@@ -4,9 +4,17 @@ import { RouterProvider } from 'react-router-dom';
 
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const HomePage = lazy(() => import('../pages/HomePage'));
+const MainContainer = lazy(() => import('../layouts/MainContainer'));
 
 const router = createBrowserRouter([
-  { path: '/', element: <HomePage /> },
+  {
+    path: '/',
+    element: <MainContainer />,
+    children: [
+      { path: '/', element: <HomePage /> },
+      { path: 'profile', element: <h1>Profile H1</h1> }
+    ]
+  },
   { path: '/login', element: <LoginPage /> }
 ]);
 
