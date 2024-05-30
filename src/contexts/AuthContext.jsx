@@ -1,12 +1,39 @@
 import { useState } from 'react';
 import { createContext } from 'react';
 import authApi from '../apis/auth';
-import { removeAccessToken, setAccessToken } from '../utils/local-storage';
+import {
+  getAccessToken,
+  removeAccessToken,
+  setAccessToken
+} from '../utils/local-storage';
+import { useEffect } from 'react';
 
 export const AuthContext = createContext();
 
+// 1.fetch on render: fetch after first render
+// 2.fetch then render: promise all feature
+// 3.render as you fetch eg. react-query swr,  react version 19 use(promise)
+
 export default function AuthContextProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
+  const [isAuthUserLoading, setIsAuthUserLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        if (getAccessToken()) {
+          const res = await authApi.getAuthUser();
+          setAuthUser(res.data.user);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsAuthUserLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const login = async credentials => {
     const res = await authApi.login(credentials);
@@ -21,7 +48,9 @@ export default function AuthContextProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ login, logout, authUser }}>
+    <AuthContext.Provider
+      value={{ login, logout, authUser, isAuthUserLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
