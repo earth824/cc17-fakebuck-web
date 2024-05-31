@@ -1,23 +1,16 @@
-import { useState } from 'react';
-import Button from '../../../components/Button';
-import Modal from '../../../components/Modal';
-import EditProfileForm from './EditProfileForm';
+import useProfile from '../hooks/useProfile';
+import MeAction from './MeAction';
+import { RELATIONSHIP_TO_AUTH_USER } from '../../../constants';
+import UnknownAction from './UnknownAction';
+import ReceiverAction from './RecieverAction';
+
+const componentMapping = {
+  [RELATIONSHIP_TO_AUTH_USER.ME]: <MeAction />,
+  [RELATIONSHIP_TO_AUTH_USER.UNKNOWN]: <UnknownAction />,
+  [RELATIONSHIP_TO_AUTH_USER.RECEIVER]: <ReceiverAction />
+};
 
 export default function ProfileAction() {
-  const [open, setOpen] = useState(false);
-  return (
-    <div>
-      <Button bg="gray" color="black" onClick={() => setOpen(true)}>
-        Edit Profile
-      </Button>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Edit Profile"
-        width={44}
-      >
-        <EditProfileForm />
-      </Modal>
-    </div>
-  );
+  const { relationshipToAuthUser } = useProfile();
+  return <>{componentMapping[relationshipToAuthUser]}</>;
 }
