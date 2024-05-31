@@ -8,7 +8,7 @@ export default function ProfileContainer() {
   const { authUser } = useAuth();
   return (
     <div className="bg-gradient-to-b from-gray-300 to-white shadow">
-      <CoverImage src={authUser?.coverImage} />
+      <CoverImage src={authUser?.coverImage} rounded="bottom" />
       <div className="flex gap-4 items-end max-w-[68.5rem] mx-auto px-8 pb-4">
         <div className="-mt-5">
           <Avatar src={authUser?.profileImage} size={10} />

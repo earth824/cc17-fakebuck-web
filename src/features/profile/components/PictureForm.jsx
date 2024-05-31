@@ -1,25 +1,19 @@
 import { useRef } from 'react';
-import Avatar from '../../../components/Avatar';
 import FormButton from './FormButton';
 import { useState } from 'react';
-import useAuth from '../../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import Spinner from '../../../components/Spinner';
 
-export default function PictureForm({ title, initialImage }) {
+export default function PictureForm({ title, initialImage, render, onSave }) {
   const fileEl = useRef();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { updateAuthUser } = useAuth();
-
   const handleClickSave = async () => {
     try {
       if (file) {
-        const formData = new FormData();
-        formData.append('profileImage', file);
         setLoading(true);
-        await updateAuthUser(formData);
+        await onSave(file);
       }
     } catch (err) {
       console.log(err);
@@ -62,10 +56,7 @@ export default function PictureForm({ title, initialImage }) {
         </div>
       </div>
       <div className="flex justify-center">
-        <Avatar
-          size={10.5}
-          src={file ? URL.createObjectURL(file) : initialImage}
-        />
+        {render(file ? URL.createObjectURL(file) : initialImage)}
       </div>
     </div>
   );
