@@ -7,6 +7,7 @@ import {
   setAccessToken
 } from '../utils/local-storage';
 import { useEffect } from 'react';
+import userApi from '../apis/user';
 
 export const AuthContext = createContext();
 
@@ -47,9 +48,14 @@ export default function AuthContextProvider({ children }) {
     setAuthUser(null);
   };
 
+  const updateAuthUser = async formData => {
+    const res = await userApi.uploadUserImage(formData);
+    setAuthUser(prev => ({ ...prev, ...res.data }));
+  };
+
   return (
     <AuthContext.Provider
-      value={{ login, logout, authUser, isAuthUserLoading }}
+      value={{ login, logout, authUser, isAuthUserLoading, updateAuthUser }}
     >
       {children}
     </AuthContext.Provider>

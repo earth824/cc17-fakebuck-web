@@ -2,13 +2,36 @@ import { useRef } from 'react';
 import Avatar from '../../../components/Avatar';
 import FormButton from './FormButton';
 import { useState } from 'react';
+import useAuth from '../../../hooks/useAuth';
+import { toast } from 'react-toastify';
+import Spinner from '../../../components/Spinner';
 
 export default function PictureForm({ title, initialImage }) {
   const fileEl = useRef();
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const { updateAuthUser } = useAuth();
+
+  const handleClickSave = async () => {
+    try {
+      if (file) {
+        const formData = new FormData();
+        formData.append('profileImage', file);
+        setLoading(true);
+        await updateAuthUser(formData);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error(err.messaage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
+      {loading && <Spinner transparent />}
       <input
         type="file"
         ref={fileEl}
@@ -24,7 +47,7 @@ export default function PictureForm({ title, initialImage }) {
         <div>
           {file && (
             <>
-              <FormButton>Save</FormButton>
+              <FormButton onClick={handleClickSave}>Save</FormButton>
               <FormButton
                 onClick={() => {
                   setFile(null);
