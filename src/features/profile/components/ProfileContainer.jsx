@@ -6,6 +6,7 @@ import useProfile from '../hooks/useProfile';
 
 export default function ProfileContainer() {
   const { profileUser } = useProfile();
+  if (!profileUser) return <h1>404!!! User was not found</h1>;
   return (
     <div className="bg-gradient-to-b from-gray-300 to-white shadow">
       <CoverImage src={profileUser?.coverImage} rounded="bottom" />
