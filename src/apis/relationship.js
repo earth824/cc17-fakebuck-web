@@ -11,4 +11,10 @@ relationshipApi.confirmRequest = senderId =>
 relationshipApi.cancelRequest = receiverId =>
   axios.delete(`/relationships/users/${receiverId}/cancel`);
 
+relationshipApi.rejectRequest = senderId =>
+  axios.delete(`/relationships/users/${senderId}/reject`);
+
+relationshipApi.unfriend = targetUserId =>
+  axios.delete(`/relationships/users/${targetUserId}/unfriend`);
+
 export default relationshipApi;

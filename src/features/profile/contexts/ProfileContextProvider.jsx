@@ -50,12 +50,24 @@ export default function ProfileContextProvider({ children }) {
     setRelationshipToAuthUser(RELATIONSHIP_TO_AUTH_USER.FRIEND);
   };
 
+  const rejectRequest = async () => {
+    await relationshipApi.rejectRequest(userId);
+    setRelationshipToAuthUser(RELATIONSHIP_TO_AUTH_USER.UNKNOWN);
+  };
+
+  const unfriend = async () => {
+    await relationshipApi.unfriend(userId);
+    setRelationshipToAuthUser(RELATIONSHIP_TO_AUTH_USER.UNKNOWN);
+  };
+
   const value = {
     profileUser,
     relationshipToAuthUser,
     requestFriend,
     cancelRequest,
-    confirmRequest
+    confirmRequest,
+    rejectRequest,
+    unfriend
   };
 
   return (
